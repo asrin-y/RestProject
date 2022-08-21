@@ -7,7 +7,6 @@ import com.example.MyRestProject.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -99,7 +98,7 @@ public class StudentServiceImplementation implements StudentService{
         if(!courseDB.getCourseIsActive())
             throw new CourseIsNotActiveException(courseId.toString());
         if(courseDB.getCourseMinTermRequired() > studentDB.getStudentTerm())
-            throw new CourseMinTermRequiredException(courseId.toString());
+            throw new CourseMinTermRequiredException(studentId,courseId);
         if(!missingPreRequisites.isEmpty())
            throw new CoursePreRequisiteException(missingPreRequisites,courseId,studentId);
         studentDB.studentAddToEnrolledCoursesList(courseId);

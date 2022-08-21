@@ -3,9 +3,14 @@ package com.example.MyRestProject.controller;
 import com.example.MyRestProject.entity.Student;
 import com.example.MyRestProject.exceptions.*;
 import com.example.MyRestProject.service.StudentService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
@@ -15,10 +20,18 @@ public class StudentController extends ExceptionController{
     @Autowired
     private StudentService studentService;
 
+    @GetMapping("/hello")
+    ResponseEntity<String> hello() {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @GetMapping("/getById/{id}")
-    public Student studentGetById(@PathVariable("id") Long studentId)
+    public ResponseEntity<Student> studentGetById(@PathVariable("id") Long studentId)
             throws NoSuchStudentException {
-        return studentService.studentFindById(studentId);
+        Student httpBody = studentService.studentFindById(studentId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("userName","asrin");
+        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(httpBody);
     }
 
     @GetMapping("getAll")
@@ -56,4 +69,5 @@ public class StudentController extends ExceptionController{
             throws NoSuchStudentException {
         return studentService.studentUpdateById(studentId,student);
     }
+
 }
